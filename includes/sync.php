@@ -133,6 +133,16 @@ function tufte_projects_schedule_sync(): void {
 add_action( 'init', 'tufte_projects_schedule_sync' );
 
 /**
+ * Clear the scheduled sync when the plugin is deactivated.
+ *
+ * @return void
+ */
+function tufte_projects_deactivate(): void {
+	wp_clear_scheduled_hook( TUFTE_PROJECTS_SYNC_HOOK );
+}
+register_deactivation_hook( TUFTE_PROJECTS_PLUGIN_FILE, 'tufte_projects_deactivate' );
+
+/**
  * Sideload the .org banner as the featured image, once. If a featured image
  * already exists it is never touched, so a custom image is never reverted.
  *

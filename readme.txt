@@ -16,7 +16,7 @@ Tufte Projects adds a Projects post type for showing off the plugins, themes, an
 * Fields fill in from WordPress.org and GitHub twice a day, and you can override any of them by hand.
 * Block Bindings put those fields into any template or pattern, and empty rows hide themselves.
 * Templates for a single project and the projects archive come with the plugin. A block theme can override either one.
-* Five patterns cover project cards, features, install steps, and FAQs.
+* Four patterns cover project cards, features, install steps, and FAQs.
 * A sidebar panel in the editor shows synced values and offers a "Refresh now" button.
 
 It was built for the Tufte Blocks theme and works with any block theme.

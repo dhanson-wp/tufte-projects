@@ -21,7 +21,13 @@ tufte_projects_assert_same( true, $tufte_projects_registry->is_registered( 'tuft
 tufte_projects_assert_same( true, $tufte_projects_registry->is_registered( 'tufte-projects//archive-project' ), 'archive-project template registered by the plugin' );
 
 $tufte_projects_patterns = WP_Block_Patterns_Registry::get_instance();
-foreach ( array( 'project-card', 'project-faq', 'project-features', 'project-install-steps', 'syllabus' ) as $tufte_projects_name ) {
+foreach ( array( 'project-card', 'project-faq', 'project-features', 'project-install-steps' ) as $tufte_projects_name ) {
 	tufte_projects_assert_same( true, $tufte_projects_patterns->is_registered( 'tufte-projects/' . $tufte_projects_name ), "pattern tufte-projects/{$tufte_projects_name} registered" );
 }
 tufte_projects_assert_same( true, defined( 'TUFTE_PROJECTS_VERSION' ), 'version constant defined' );
+
+// Deactivation clears the sync event; re-run the scheduler so the site stays scheduled.
+tufte_projects_deactivate();
+tufte_projects_assert_same( false, wp_next_scheduled( 'tufte_blocks_projects_sync' ), 'deactivation clears the sync event' );
+tufte_projects_schedule_sync();
+tufte_projects_assert_same( true, false !== wp_next_scheduled( 'tufte_blocks_projects_sync' ), 'scheduler restores the sync event' );

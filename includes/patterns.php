@@ -22,10 +22,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 function tufte_projects_register_patterns(): void {
 	register_block_pattern_category(
 		'tufte-projects',
-		array( 'label' => __( 'Projects', 'tufte-projects' ) )
+		array(
+			'label'       => __( 'Projects', 'tufte-projects' ),
+			'description' => __( 'Project showcase cards and layouts.', 'tufte-projects' ),
+		)
 	);
 
-	$names = array( 'project-card', 'project-faq', 'project-features', 'project-install-steps', 'syllabus' );
+	$names = array( 'project-card', 'project-faq', 'project-features', 'project-install-steps' );
 
 	foreach ( $names as $name ) {
 		$file = plugin_dir_path( TUFTE_PROJECTS_PLUGIN_FILE ) . 'patterns/' . $name . '.php';
