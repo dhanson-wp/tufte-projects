@@ -1,0 +1,34 @@
+name: Publish to WordPress.com
+
+# For WordPress.com GitHub deployments in advanced mode. This repo is connected
+# with /wp-content/plugins/tufte-projects as the destination, so the artifact is
+# the plugin itself. tests, .gitattributes, and .github never leave GitHub.
+# With several include paths, upload-artifact v4 roots the artifact at their
+# least common ancestor (the repo root here), so these land directly in the
+# destination, the same way Tufte Formats deploys.
+# workflow_dispatch only works once this file is on the default branch.
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Build the wpcom artifact
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Upload the artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wpcom
+          path: |
+            tufte-projects.php
+            uninstall.php
+            readme.txt
+            assets
+            includes
+            patterns
+            templates
+          retention-days: 1
