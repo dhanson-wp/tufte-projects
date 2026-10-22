@@ -81,7 +81,7 @@ function tufte_projects_sync( int $post_id ): array {
 	$wporg_result = '' === $slug ? null : tufte_projects_fetch_wporg( $slug );
 	$cache        = tufte_projects_merge_source( $cache, 'wporg', $wporg_result );
 
-	$github_result = '' === $github ? null : tufte_projects_fetch_github( $github );
+	$github_result = '' === $github ? null : tufte_projects_fetch_github( $github, $cache['github'] );
 	$cache         = tufte_projects_merge_source( $cache, 'github', $github_result );
 
 	foreach ( $cache['errors'] as $source => $message ) {

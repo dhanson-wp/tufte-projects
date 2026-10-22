@@ -57,7 +57,7 @@ function tufte_projects_http_get( string $url, array $headers = array() ) {
 	}
 	$code = wp_remote_retrieve_response_code( $response );
 	if ( 200 !== $code ) {
-		return new WP_Error( 'tufte_http_' . $code, sprintf( 'HTTP %d from %s', $code, $url ) );
+		return new WP_Error( 'tufte_http_' . $code, sprintf( 'HTTP %d from %s', $code, $url ), array( 'status' => $code ) );
 	}
 	return wp_remote_retrieve_body( $response );
 }
@@ -69,10 +69,15 @@ function tufte_projects_http_get( string $url, array $headers = array() ) {
  * style.css is not a theme header), releases/latest. A missing release is
  * not an error; a missing repo or header is.
  *
- * @param string $url Repository URL.
+ * Only a 404 means "no releases". Any other failed release request (a rate
+ * limit, a 5xx, a timeout) keeps the release fields from $previous, so a bad
+ * sync never blanks a good release date or download link.
+ *
+ * @param string     $url      Repository URL.
+ * @param array|null $previous Cached GitHub values from the last good sync.
  * @return array|WP_Error
  */
-function tufte_projects_fetch_github( string $url ) {
+function tufte_projects_fetch_github( string $url, ?array $previous = null ) {
 	$parsed = tufte_projects_parse_github_url( $url );
 	if ( null === $parsed ) {
 		return new WP_Error( 'tufte_github_url', sprintf( 'Not a GitHub repository URL: %s', $url ) );
@@ -113,7 +118,18 @@ function tufte_projects_fetch_github( string $url ) {
 		$release = is_array( $decoded ) ? $decoded : array();
 	}
 
-	return tufte_projects_map_github( $repo_data, $header, $release );
+	$mapped = tufte_projects_map_github( $repo_data, $header, $release );
+
+	$error_data  = is_wp_error( $release_body ) ? $release_body->get_error_data() : null;
+	$no_releases = is_array( $error_data ) && 404 === ( $error_data['status'] ?? null );
+	if ( is_wp_error( $release_body ) && ! $no_releases ) {
+		error_log( sprintf( '[tufte-projects] %s/%s release fetch failed, keeping cached release: %s', $owner, $repo, $release_body->get_error_message() ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		foreach ( array( 'release_date', 'link_download' ) as $key ) {
+			$mapped[ $key ] = isset( $previous[ $key ] ) ? (string) $previous[ $key ] : '';
+		}
+	}
+
+	return $mapped;
 }
 
 /**
