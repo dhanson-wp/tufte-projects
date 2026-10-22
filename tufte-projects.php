@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Tufte Projects
  * Description:       A Projects post type for showcasing plugins, themes, and tools, with fields synced from WordPress.org and GitHub.
- * Version:           0.1.0
+ * Version:           0.1.1
  * Requires at least: 6.7
  * Requires PHP:      7.4
  * Author:            Derek Hanson
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TUFTE_PROJECTS_VERSION', '0.1.0' );
+define( 'TUFTE_PROJECTS_VERSION', '0.1.1' );
 define( 'TUFTE_PROJECTS_PLUGIN_FILE', __FILE__ );
 
 /**

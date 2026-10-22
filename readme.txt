@@ -3,7 +3,7 @@ Contributors: dhanson
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ It was built for the Tufte Blocks theme and works with any block theme.
 To sync from the command line, run `wp tufte-projects sync [<id>]`.
 
 == Changelog ==
+
+= 0.1.1 =
+* A sync won't wipe a project's release date and download link anymore when GitHub rate-limits, times out, or errors on the latest release. It'll keep the last good values, and only a real "no releases" answer clears them.
 
 = 0.1.0 =
 * First release. The Projects feature moves out of the Tufte Blocks theme into this plugin, with the same post type, taxonomies, fields, and block binding, so existing projects keep working.
